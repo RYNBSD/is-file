@@ -38,11 +38,11 @@ export default {
     isText: (input) => isText(type, input),
     isFont: (input) => isFont(type, input),
     /**
-   *
-   * @param input - input path
-   * @param me - mime or extension
-   * @returns - is valid or not
-   */
+     *
+     * @param input - input path
+     * @param me - mime or extension
+     * @returns - is valid or not
+     */
     isCustom: (input, me) => isCustom(type, input, me),
 };
 //# sourceMappingURL=index.js.map

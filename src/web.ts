@@ -40,5 +40,8 @@ export default {
    * @param me - mime or extension
    * @returns - is valid or not
    */
-  isCustom: (input: TypeInput | TypeInput[], me: string) => isCustom(type, input, me),
+  isCustom: (input: TypeInput | TypeInput[], me: string) =>
+    isCustom(type, input, me),
 } as const;
+
+export type * from "./types/index.js";

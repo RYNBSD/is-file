@@ -16,12 +16,13 @@ declare const _default: {
     readonly isText: (input: TypeInput | TypeInput[]) => Promise<boolean>;
     readonly isFont: (input: TypeInput | TypeInput[]) => Promise<boolean>;
     /**
-   *
-   * @param input - input path
-   * @param me - mime or extension
-   * @returns - is valid or not
-   */
+     *
+     * @param input - input path
+     * @param me - mime or extension
+     * @returns - is valid or not
+     */
     readonly isCustom: (input: TypeInput | TypeInput[], me: string) => Promise<boolean>;
 };
 export default _default;
+export type * from "./types/index.js";
 //# sourceMappingURL=index.d.ts.map

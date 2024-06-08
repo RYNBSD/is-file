@@ -17,4 +17,5 @@ declare const _default: {
     readonly isCustom: (input: TypeInput | TypeInput[], me: string) => Promise<boolean>;
 };
 export default _default;
+export type * from "./types/index.js";
 //# sourceMappingURL=web.d.ts.map

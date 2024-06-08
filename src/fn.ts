@@ -1,4 +1,4 @@
-import fileType from "file-type";
+import type { FileTypeResult } from "./types/index.js";
 
 const APPLICATION_MIME = "application/";
 const IMAGE_MIME = "image/";
@@ -8,7 +8,7 @@ const MODEL_MIME = "model/";
 const TEXT_MIME = "text/";
 const FONT_MIME = "font/";
 
-type TypeFn<T> = (input: T) => Promise<fileType.FileTypeResult | undefined>;
+type TypeFn<T> = (input: T) => Promise<FileTypeResult | undefined>;
 
 // me = mime | extension
 

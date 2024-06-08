@@ -39,11 +39,14 @@ export default {
   isModel: (input: TypeInput | TypeInput[]) => isModel(type, input),
   isText: (input: TypeInput | TypeInput[]) => isText(type, input),
   isFont: (input: TypeInput | TypeInput[]) => isFont(type, input),
-    /**
-   * 
+  /**
+   *
    * @param input - input path
    * @param me - mime or extension
    * @returns - is valid or not
    */
-  isCustom: (input: TypeInput | TypeInput[], me: string) => isCustom(type, input, me),
+  isCustom: (input: TypeInput | TypeInput[], me: string) =>
+    isCustom(type, input, me),
 } as const;
+
+export type * from "./types/index.js";

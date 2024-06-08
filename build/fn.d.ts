@@ -1,5 +1,5 @@
-import fileType from "file-type";
-type TypeFn<T> = (input: T) => Promise<fileType.FileTypeResult | undefined>;
+import type { FileTypeResult } from "./types/index.js";
+type TypeFn<T> = (input: T) => Promise<FileTypeResult | undefined>;
 export declare function isApplication<T>(typeFn: TypeFn<T>, input: T | T[]): Promise<boolean>;
 export declare function isImage<T>(typeFn: TypeFn<T>, input: T | T[]): Promise<boolean>;
 export declare function isVideo<T>(typeFn: TypeFn<T>, input: T | T[]): Promise<boolean>;
