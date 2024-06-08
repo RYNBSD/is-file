@@ -1,12 +1,20 @@
 {
   "name": "@ryn-bsd/is-file",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "a js package help to check files format",
   "main": "./build/index.js",
   "type": "module",
   "scripts": {
     "test": "yarn compile && jest",
     "compile": "tsc"
+  },
+  "exports": {
+    ".": {
+      "default": "./build/index.js",
+      "node": "./build/index.js"
+    },
+    "./web": "./build/web.js",
+    "./node": "./build/index.js"
   },
   "keywords": [
     "is",

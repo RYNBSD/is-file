@@ -27,18 +27,18 @@ export async function type(input: TypeInput) {
 }
 
 export default {
-  isApplication: (input: TypeInput) => isApplication(type, input),
-  isImage: (input: TypeInput) => isImage(type, input),
-  isVideo: (input: TypeInput) => isVideo(type, input),
-  isAudio: (input: TypeInput) => isAudio(type, input),
-  isModel: (input: TypeInput) => isModel(type, input),
-  isText: (input: TypeInput) => isText(type, input),
-  isFont: (input: TypeInput) => isFont(type, input),
+  isApplication: (input: TypeInput | TypeInput[]) => isApplication(type, input),
+  isImage: (input: TypeInput | TypeInput[]) => isImage(type, input),
+  isVideo: (input: TypeInput | TypeInput[]) => isVideo(type, input),
+  isAudio: (input: TypeInput | TypeInput[]) => isAudio(type, input),
+  isModel: (input: TypeInput | TypeInput[]) => isModel(type, input),
+  isText: (input: TypeInput | TypeInput[]) => isText(type, input),
+  isFont: (input: TypeInput | TypeInput[]) => isFont(type, input),
   /**
    *
    * @param input - input path
    * @param me - mime or extension
    * @returns - is valid or not
    */
-  isCustom: (input: TypeInput, me: string) => isCustom(type, input, me),
+  isCustom: (input: TypeInput | TypeInput[], me: string) => isCustom(type, input, me),
 } as const;
