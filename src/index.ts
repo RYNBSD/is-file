@@ -46,4 +46,4 @@ export default {
    * @returns - is valid or not
    */
   isCustom: (input: TypeInput, me: string) => isCustom(type, input, me),
-};
+} as const;

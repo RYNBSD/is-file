@@ -1,4 +1,4 @@
-JS Library helps to check file formats
+JS Library helps to **check file formats**, in **node** and **web**.
 
 # API
 
