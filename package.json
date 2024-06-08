@@ -1,6 +1,6 @@
 {
   "name": "@ryn-bsd/is-file",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a js package help to check files format",
   "main": "./build/index.js",
   "type": "module",
