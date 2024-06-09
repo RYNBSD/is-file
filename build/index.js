@@ -1,48 +1,22 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import fileType from "file-type";
-import { Readable } from "stream";
-import { isBuffer, isString } from "./util.js";
+import * as Node from "./node.js";
+import * as Web from "./web.js";
 import { isApplication, isAudio, isCustom, isFont, isImage, isModel, isText, isVideo, } from "./fn.js";
-function isStream(value) {
-    return value instanceof Readable;
-}
-/**
- * @param input - File path
- * @returns ext and mime
- */
-export function type(input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (isString(input))
-            return fileType.fromFile(input);
-        else if (isBuffer(input))
-            return fileType.fromBuffer(input);
-        else if (isStream(input))
-            return fileType.fromStream(input);
-        throw new TypeError("Input must be of type (string | Uint8Array | ArrayBuffer | Buffer | Readable)");
-    });
-}
+const isBrowser = typeof window !== "undefined";
+export const typeFn = isBrowser ? Web.type : Node.type;
 export default {
-    isApplication: (input) => isApplication(type, input),
-    isImage: (input) => isImage(type, input),
-    isVideo: (input) => isVideo(type, input),
-    isAudio: (input) => isAudio(type, input),
-    isModel: (input) => isModel(type, input),
-    isText: (input) => isText(type, input),
-    isFont: (input) => isFont(type, input),
+    isApplication: (input, options) => isApplication(typeFn, input, options),
+    isImage: (input, options) => isImage(typeFn, input, options),
+    isVideo: (input, options) => isVideo(typeFn, input, options),
+    isAudio: (input, options) => isAudio(typeFn, input, options),
+    isModel: (input, options) => isModel(typeFn, input, options),
+    isText: (input, options) => isText(typeFn, input, options),
+    isFont: (input, options) => isFont(typeFn, input, options),
     /**
      *
      * @param input - input path
      * @param me - mime or extension
      * @returns - is valid or not
      */
-    isCustom: (input, me) => isCustom(type, input, me),
+    isCustom: (input, me, options) => isCustom(typeFn, input, me, options),
 };
 //# sourceMappingURL=index.js.map

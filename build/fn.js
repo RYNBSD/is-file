@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const APPLICATION_MIME = "application/";
 const IMAGE_MIME = "image/";
 const VIDEO_MIME = "video/";
@@ -15,79 +6,49 @@ const MODEL_MIME = "model/";
 const TEXT_MIME = "text/";
 const FONT_MIME = "font/";
 // me = mime | extension
-function checkInput(typeFn, input, me) {
-    return __awaiter(this, void 0, void 0, function* () {
-        var _a;
-        const type = (_a = (yield typeFn(input))) !== null && _a !== void 0 ? _a : { mime: "", ext: "" };
-        return type.mime.startsWith(me) || type.ext === me;
-    });
+async function checkInput(typeFn, input, me) {
+    const type = (await typeFn(input)) ?? { mime: "", ext: "" };
+    return type.mime.startsWith(me) || type.ext === me;
 }
-function checkInputs(typeFn, inputs, me) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const promises = yield Promise.allSettled(inputs.map((input) => checkInput(typeFn, input, me)));
-        for (const promise of promises) {
-            if (promise.status === "rejected")
-                return false;
-            if (!promise.value)
-                return false;
-        }
-        return true;
-    });
+async function checkInputs(typeFn, inputs, me, options) {
+    const { returns = false } = options || {};
+    const returnIndicator = [];
+    const promises = await Promise.allSettled(inputs.map((input) => checkInput(typeFn, input, me)));
+    for (const i in promises) {
+        const promise = promises[i];
+        if ((promise.status === "rejected" || !promise.value) && !returns)
+            return false;
+        returnIndicator.push({
+            valid: promise.value,
+            value: inputs[i],
+        });
+    }
+    return returns ? returnIndicator : true;
 }
-export function isApplication(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, APPLICATION_MIME)
-            : checkInput(typeFn, input, APPLICATION_MIME);
-    });
+export async function isCustom(typeFn, input, me, options) {
+    return Array.isArray(input)
+        ? checkInputs(typeFn, input, me, options)
+        : checkInput(typeFn, input, me);
 }
-export function isImage(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, IMAGE_MIME)
-            : checkInput(typeFn, input, IMAGE_MIME);
-    });
+export async function isApplication(typeFn, input, options) {
+    return isCustom(typeFn, input, APPLICATION_MIME, options);
 }
-export function isVideo(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, VIDEO_MIME)
-            : checkInput(typeFn, input, VIDEO_MIME);
-    });
+export async function isImage(typeFn, input, options) {
+    return isCustom(typeFn, input, IMAGE_MIME, options);
 }
-export function isAudio(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, AUDIO_MIME)
-            : checkInput(typeFn, input, AUDIO_MIME);
-    });
+export async function isVideo(typeFn, input, options) {
+    return isCustom(typeFn, input, VIDEO_MIME, options);
 }
-export function isModel(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, MODEL_MIME)
-            : checkInput(typeFn, input, MODEL_MIME);
-    });
+export async function isAudio(typeFn, input, options) {
+    return isCustom(typeFn, input, AUDIO_MIME, options);
 }
-export function isText(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, TEXT_MIME)
-            : checkInput(typeFn, input, TEXT_MIME);
-    });
+export async function isModel(typeFn, input, options) {
+    return isCustom(typeFn, input, MODEL_MIME, options);
 }
-export function isFont(typeFn, input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, FONT_MIME)
-            : checkInput(typeFn, input, FONT_MIME);
-    });
+export async function isText(typeFn, input, options) {
+    return isCustom(typeFn, input, TEXT_MIME, options);
 }
-export function isCustom(typeFn, input, me) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return Array.isArray(input)
-            ? checkInputs(typeFn, input, me)
-            : checkInput(typeFn, input, me);
-    });
+export async function isFont(typeFn, input, options) {
+    return isCustom(typeFn, input, FONT_MIME, options);
 }
 //# sourceMappingURL=fn.js.map

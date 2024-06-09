@@ -1,11 +1,13 @@
 const { Blob } = require("node:buffer");
 const { readFile } = require("node:fs/promises");
 const { ReadableStream } = require("node:stream/web");
-const { default: isFile } = require("../build/web.js");
+const { validateReturns } = require("./utils.cjs");
+global.window = "123"; // just simulation for web env
+const { default: isFile } = require("../build/index.js");
 
 // TODO: fix image and audio test (web readable)
 
-describe("Web", () => {
+describe("Web Single", () => {
   it("isApplication", async () => {
     const APPLICATION_PATH = "assets/text.xml";
 
@@ -113,5 +115,207 @@ describe("Web", () => {
       "application/xml"
     );
     expect(readableResult).toBeTruthy();
+  });
+});
+
+describe("Web Multiple", () => {
+  it("isApplication", async () => {
+    const paths = [
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/model.glb",
+      "assets/audio.mp3",
+      "assets/video.mp4",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isApplication(blob, { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isApplication(webReadable, {
+      returns: true,
+    });
+    validateReturns(readableResult);
+  });
+
+  it("isImage", async () => {
+    const paths = [
+      "assets/image.png",
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/model.glb",
+      "assets/audio.mp3",
+      "assets/video.mp4",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isImage(blob, { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isImage(webReadable, {
+      returns: true,
+    });
+    // validateReturns(readableResult);
+  });
+
+  it("isVideo", async () => {
+    const paths = [
+      "assets/video.mp4",
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/model.glb",
+      "assets/audio.mp3",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isVideo(blob, { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isVideo(webReadable, {
+      returns: true,
+    });
+    validateReturns(readableResult);
+  });
+
+  it("isAudio", async () => {
+    const paths = [
+      "assets/audio.mp3",
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/model.glb",
+      "assets/video.mp4",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isAudio(blob, { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isAudio(webReadable, {
+      returns: true,
+    });
+    // validateReturns(readableResult);
+  });
+
+  it("isModel", async () => {
+    const paths = [
+      "assets/model.glb",
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/audio.mp3",
+      "assets/video.mp4",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isModel(blob, { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isModel(webReadable, {
+      returns: true,
+    });
+    validateReturns(readableResult);
+  });
+
+  it("isText", async () => {});
+
+  it("isFont", async () => {
+    const paths = [
+      "assets/font.ttf",
+      "assets/text.xml",
+      "assets/model.glb",
+      "assets/audio.mp3",
+      "assets/video.mp4",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isFont(blob, { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isFont(webReadable, {
+      returns: true,
+    });
+    validateReturns(readableResult);
+  });
+
+  it("isCustom (extension)", async () => {
+    const paths = [
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/model.glb",
+      "assets/audio.mp3",
+      "assets/video.mp4",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isCustom(blob, "xml", { returns: true });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isCustom(webReadable, "xml", {
+      returns: true,
+    });
+    validateReturns(readableResult);
+  });
+
+  it("isCustom (mime)", async () => {
+    const paths = [
+      "assets/text.xml",
+      "assets/font.ttf",
+      "assets/model.glb",
+      "assets/audio.mp3",
+      "assets/video.mp4",
+      "assets/image.png",
+    ];
+
+    const buffer = await Promise.all(paths.map((path) => readFile(path)));
+    const blob = buffer.map((buf) => new Blob([buf]));
+    const bufferResult = await isFile.isCustom(blob, "application/xml", {
+      returns: true,
+    });
+    validateReturns(bufferResult);
+
+    const webReadable = buffer.map((buf) =>
+      ReadableStream.from(buf.toString())
+    );
+    const readableResult = await isFile.isCustom(
+      webReadable,
+      "application/xml",
+      {
+        returns: true,
+      }
+    );
+    validateReturns(readableResult);
   });
 });

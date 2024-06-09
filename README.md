@@ -20,9 +20,7 @@ Those functions need one parameter, exactly file. Files can be passed as path st
 # How to import
 
 ```js
-import isFile from "@ryn-bsd/is-file"; // node
-import isFile from "@ryn-bsd/is-file/web"; // web
-import isFile from "@ryn-bsd/is-file/node"; // node
+import isFile from "@ryn-bsd/is-file"; // base on your environment it will import node or web functionalities
 ```
 
 # Examples
@@ -30,31 +28,37 @@ import isFile from "@ryn-bsd/is-file/node"; // node
 ```js
 // Single //
 
-import isFile from "../build/index.js";
+import isFile from "@ryn-bsd/is-file";
 
-isFile.isApplication("../assets/text.xml");
+isFile.isApplication("text.xml");
 // => true, otherwise false
 
-isFile.isImage("../assets/image.png");
+isFile.isImage("image.png");
 // => true, otherwise false
 
-isFile.isVideo("../assets/video.mp4");
+isFile.isVideo("video.mp4");
 // => true, otherwise false
 
-isFile.isAudio("../assets/audio.mp3");
+isFile.isAudio("audio.mp3");
 // => true, otherwise false
 
-isFile.isFont("../assets/font.ttf");
+isFile.isFont("font.ttf");
 // => true, otherwise false
 
-isFile.isModel("../assets/model.glb");
+isFile.isModel("model.glb");
+// => true, otherwise false
+
+isFile.isCustom("custom.png", "image/png");
+// => true, otherwise false
+
+isFile.isCustom("custom.png", "png");
 // => true, otherwise false
 ```
 
 ```js
 // Multiple //
 
-import isFile from "../build/index.js";
+import isFile from "@ryn-bsd/is-file";
 
 isFile.isApplication(["application.xml", "application.pdf"]);
 // => true, otherwise false
@@ -73,18 +77,32 @@ isFile.isFont(["font.ttf", "font.woff"]);
 
 isFile.isModel(["model.glb", "model.gltf"]);
 // => true, otherwise false
+
+isFile.isCustom(["custom.png", "custom.xml", "custom.glb"], "image/png");
+// => false, otherwise true
+
+isFile.isCustom(["custom.png", "custom.xml", "custom.glb"], "png");
+// => false, otherwise true
 ```
+
+# Options
+
+| option  | description                                                                                                                                                                                                                                            | default |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| returns | In case of passing array, adding this option the function will return new array with two properties **valid** and **value**, valid represent if the file is valid (boolean) and value represent the value of the file (in the same type you passed it) | false   |
+
+# Core
 
 ```js
 // Core //
 
-import { type } from "../build/index";
+import { typeFn } from "@ryn-bsd/is-file";
 
 // This is the core function for the library you can import it like this,
 // and use it, If it detect the file format if return an object
 // otherwise undefined
 
-type("image.png");
+typeFn("image.png");
 // => { mime: "image/png", ext: png }, otherwise undefined
 ```
 

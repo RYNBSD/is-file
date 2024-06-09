@@ -1,6 +1,6 @@
 {
   "name": "@ryn-bsd/is-file",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "a js package help to check files format",
   "main": "./build/index.js",
   "type": "module",
@@ -12,9 +12,7 @@
     ".": {
       "default": "./build/index.js",
       "node": "./build/index.js"
-    },
-    "./web": "./build/web.js",
-    "./node": "./build/index.js"
+    }
   },
   "keywords": [
     "is",
@@ -44,6 +42,9 @@
     "custom",
     "customs",
     "is-custom",
+    "node",
+    "browser",
+    "web",
     "rynbsd",
     "ryn-bsd",
     "ryn__bsd"

@@ -1,6 +1,6 @@
-import fileType from "file-type";
-import { Readable } from "stream";
-import { isBuffer, isString } from "./util.js";
+import type { IsOptions } from "./types.js";
+import * as Node from "./node.js";
+import * as Web from "./web.js";
 import {
   isApplication,
   isAudio,
@@ -12,41 +12,35 @@ import {
   isVideo,
 } from "./fn.js";
 
-function isStream(value: unknown): value is Readable {
-  return value instanceof Readable;
-}
+const isBrowser = typeof window !== "undefined";
+export const typeFn = isBrowser ? Web.type : Node.type;
 
-type TypeInput = string | Uint8Array | ArrayBuffer | Buffer | Readable;
-
-/**
- * @param input - File path
- * @returns ext and mime
- */
-export async function type(input: TypeInput) {
-  if (isString(input)) return fileType.fromFile(input);
-  else if (isBuffer(input)) return fileType.fromBuffer(input);
-  else if (isStream(input)) return fileType.fromStream(input);
-  throw new TypeError(
-    "Input must be of type (string | Uint8Array | ArrayBuffer | Buffer | Readable)"
-  );
-}
+export type InputTp = typeof isBrowser extends true ? Web.TypeInput : Node.TypeInput;
+export type TypeFn = typeof isBrowser extends true ? typeof Web.type : typeof Node.type
 
 export default {
-  isApplication: (input: TypeInput | TypeInput[]) => isApplication(type, input),
-  isImage: (input: TypeInput | TypeInput[]) => isImage(type, input),
-  isVideo: (input: TypeInput | TypeInput[]) => isVideo(type, input),
-  isAudio: (input: TypeInput | TypeInput[]) => isAudio(type, input),
-  isModel: (input: TypeInput | TypeInput[]) => isModel(type, input),
-  isText: (input: TypeInput | TypeInput[]) => isText(type, input),
-  isFont: (input: TypeInput | TypeInput[]) => isFont(type, input),
+  isApplication: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isApplication(typeFn as TypeFn, input, options),
+  isImage: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isImage(typeFn as TypeFn, input, options),
+  isVideo: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isVideo(typeFn as TypeFn, input, options),
+  isAudio: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isAudio(typeFn as TypeFn, input, options),
+  isModel: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isModel(typeFn as TypeFn, input, options),
+  isText: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isText(typeFn as TypeFn, input, options),
+  isFont: (input: InputTp | InputTp[], options?: IsOptions) =>
+    isFont(typeFn as TypeFn, input, options),
   /**
    *
    * @param input - input path
    * @param me - mime or extension
    * @returns - is valid or not
    */
-  isCustom: (input: TypeInput | TypeInput[], me: string) =>
-    isCustom(type, input, me),
+  isCustom: (input: InputTp | InputTp[], me: string, options?: IsOptions) =>
+    isCustom(typeFn as TypeFn, input, me, options),
 } as const;
 
-export type * from "./types/index.js";
+export type * from "./types.js";

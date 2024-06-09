@@ -1,28 +1,28 @@
 /// <reference types="node" resolution-mode="require"/>
 /// <reference types="node" resolution-mode="require"/>
-import { Readable } from "stream";
-type TypeInput = string | Uint8Array | ArrayBuffer | Buffer | Readable;
-/**
- * @param input - File path
- * @returns ext and mime
- */
-export declare function type(input: TypeInput): Promise<import("file-type/core.js").FileTypeResult | undefined>;
+import type { IsOptions } from "./types.js";
+import * as Node from "./node.js";
+import * as Web from "./web.js";
+declare const isBrowser: boolean;
+export declare const typeFn: typeof Web.type | typeof Node.type;
+export type InputTp = typeof isBrowser extends true ? Web.TypeInput : Node.TypeInput;
+export type TypeFn = typeof isBrowser extends true ? typeof Web.type : typeof Node.type;
 declare const _default: {
-    readonly isApplication: (input: TypeInput | TypeInput[]) => Promise<boolean>;
-    readonly isImage: (input: TypeInput | TypeInput[]) => Promise<boolean>;
-    readonly isVideo: (input: TypeInput | TypeInput[]) => Promise<boolean>;
-    readonly isAudio: (input: TypeInput | TypeInput[]) => Promise<boolean>;
-    readonly isModel: (input: TypeInput | TypeInput[]) => Promise<boolean>;
-    readonly isText: (input: TypeInput | TypeInput[]) => Promise<boolean>;
-    readonly isFont: (input: TypeInput | TypeInput[]) => Promise<boolean>;
+    readonly isApplication: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
+    readonly isImage: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
+    readonly isVideo: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
+    readonly isAudio: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
+    readonly isModel: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
+    readonly isText: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
+    readonly isFont: (input: InputTp | InputTp[], options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
     /**
      *
      * @param input - input path
      * @param me - mime or extension
      * @returns - is valid or not
      */
-    readonly isCustom: (input: TypeInput | TypeInput[], me: string) => Promise<boolean>;
+    readonly isCustom: (input: InputTp | InputTp[], me: string, options?: IsOptions) => Promise<boolean | import("./types.js").Return<string | import("stream").Readable | Uint8Array | ArrayBuffer | Buffer>[]>;
 };
 export default _default;
-export type * from "./types/index.js";
+export type * from "./types.js";
 //# sourceMappingURL=index.d.ts.map
