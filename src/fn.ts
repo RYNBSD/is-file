@@ -22,7 +22,7 @@ async function checkInputs<T>(
   inputs: T[],
   me: string,
   options?: IsOptions
-) {
+): Promise<boolean | Return<T>[]> {
   const { returns = false } = options || {};
 
   const returnIndicator: Return<T>[] = [];
