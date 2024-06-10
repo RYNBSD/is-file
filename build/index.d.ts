@@ -22,5 +22,6 @@ declare const _default: {
     readonly isCustom: <T_7 extends Node.TypeInput | Node.TypeInput[]>(input: T_7, me: string, options?: IsOptions) => Promise<boolean | import("./types.js").Return<Node.TypeInput>[]>;
 };
 export default _default;
+export { Node, Web };
 export type * from "./types.js";
 //# sourceMappingURL=index.d.ts.map

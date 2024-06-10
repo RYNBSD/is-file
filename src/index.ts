@@ -52,4 +52,5 @@ export default {
   ) => isCustom(typeFn as TypeFn, input, me, options),
 } as const;
 
+export { Node, Web };
 export type * from "./types.js";

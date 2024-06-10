@@ -19,4 +19,5 @@ export default {
      */
     isCustom: (input, me, options) => isCustom(typeFn, input, me, options),
 };
+export { Node, Web };
 //# sourceMappingURL=index.js.map
