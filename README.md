@@ -61,41 +61,19 @@ isFile.isCustom("custom.png", "png");
 import isFile from "@ryn-bsd/is-file";
 
 isFile.isApplication(["application.xml", "application.pdf"]);
-// => true, otherwise false
-
-isFile.isImage(["image.png", "image.jpeg"]);
-// => true, otherwise false
-
-isFile.isVideo(["video.mp4", "video.mov"]);
-// => true, otherwise false
-
-isFile.isAudio(["audio.mp3", "audio.wav"]);
-// => true, otherwise false
-
-isFile.isFont(["font.ttf", "font.woff"]);
-// => true, otherwise false
-
-isFile.isModel(["model.glb", "model.gltf"]);
-// => true, otherwise false
+// => [{ valid: true, value: "application.xml" }, { valid: true, value: "application.pdf" }]
 
 isFile.isCustom(["custom.png", "custom.xml", "custom.glb"], "image/png");
-// => false, otherwise true
-
-isFile.isCustom(["custom.png", "custom.xml", "custom.glb"], "png");
-// => false, otherwise true
+// => [{ valid: true, value: "custom.png" }, { valid: false, value: "custom.xml" }, { valid: false, value: "custom.glb" }]
 ```
-
-# Options
-
-| option  | description                                                                                                                                                                                                                                            | default |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| returns | In case of passing array, adding this option the function will return new array with two properties **valid** and **value**, valid represent if the file is valid (boolean) and value represent the value of the file (in the same type you passed it) | false   |
 
 # Core
 
 ```js
 // Core //
 
+import { Node } from "@ryn-bsd/is-file"; // Node core
+import { Web } from "@ryn-bsd/is-file"; // Web core
 import { typeFn } from "@ryn-bsd/is-file";
 
 // This is the core function for the library you can import it like this,

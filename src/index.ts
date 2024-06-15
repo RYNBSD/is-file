@@ -27,4 +27,3 @@ export default {
 } as const;
 
 export * from "./config.js";
-export type * from "./types.js";

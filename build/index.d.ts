@@ -17,5 +17,4 @@ declare const _default: {
 };
 export default _default;
 export * from "./config.js";
-export type * from "./types.js";
 //# sourceMappingURL=index.d.ts.map

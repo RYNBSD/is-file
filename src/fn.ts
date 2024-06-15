@@ -1,4 +1,3 @@
-import type { IsOptions, Return } from "./types.js";
 import type { InputTp } from "./config.js";
 import { typeFn } from "./config.js";
 
@@ -10,105 +9,80 @@ const MODEL_MIME = "model/";
 const TEXT_MIME = "text/";
 const FONT_MIME = "font/";
 
+type CheckInputsReturn = Awaited<ReturnType<typeof checkInputs>>;
+
 // me = mime | extension
 
-async function checkInput<T>(input: T, me: string) {
+async function checkInput<T extends InputTp>(input: T, me: string) {
   // @ts-ignore
-  const type = (await typeFn(input)) ?? { mime: "", ext: "" };
-  return type.mime.startsWith(me) || type.ext === me;
+  const type = await typeFn(input);
+  return typeof type === "undefined"
+    ? false
+    : type.mime.startsWith(me) || type.ext === me;
 }
 
-async function checkInputs<T>(
-  inputs: T,
-  me: string,
-  options?: IsOptions<false>
-): Promise<boolean>;
-async function checkInputs<T>(
-  inputs: T,
-  me: string,
-  options?: IsOptions<true>
-): Promise<Return<T>[]>;
-async function checkInputs<T>(inputs: T[], me: string, options?: IsOptions) {
-  const { returns = false } = options || {};
-  const returnIndicator: Return<T>[] = [];
-
+async function checkInputs<T extends InputTp>(inputs: T[], me: string) {
   const promises = await Promise.allSettled(
-    inputs.map((input) => checkInput<T>(input, me))
+    inputs.map((input) => checkInput(input, me))
   );
-  for (const i in promises) {
-    const promise = promises[i]!;
-
-    if (promise.status === "rejected" || !promise.value) return false;
-    if (!returns) continue;
-
-    returnIndicator.push({
-      valid: promise.value,
-      value: inputs[i]!,
-    });
-  }
-
-  return returns ? returnIndicator : true;
+  return promises.map((promise, i) => ({
+    valid: promise.status === "fulfilled" && promise.value,
+    value: inputs[i]!,
+  }));
 }
 
-export async function isCustom<
-  T extends InputTp | InputTp[],
-  O extends boolean
->(input: T, me: string, options?: IsOptions<O>) {
-  return Array.isArray(input)
-    ? // @ts-ignore
-      (checkInputs<T>(input, me, options) as Promise<
-        O extends true ? Return<T>[] : boolean
-      >)
-    : (checkInput<T>(input, me) as Promise<
-        O extends true ? Return<T>[] : boolean
-      >);
-}
-
-export async function isApplication<
-  T extends InputTp | InputTp[],
-  O extends boolean
->(input: T, options?: IsOptions<O>) {
-  return isCustom<T, O>(input, APPLICATION_MIME, options);
-}
-
-export async function isImage<T extends InputTp | InputTp[], O extends boolean>(
+export async function isCustom<T extends InputTp>(
   input: T,
-  options?: IsOptions<O>
+  me: string
+): Promise<boolean>;
+export async function isCustom<T extends InputTp[]>(
+  input: T,
+  me: string
+): Promise<CheckInputsReturn>;
+export async function isCustom<T extends InputTp | InputTp[]>(
+  input: T,
+  me: string
 ) {
-  return isCustom<T, O>(input, IMAGE_MIME, options);
+  return Array.isArray(input) ? checkInputs(input, me) : checkInput(input, me);
 }
 
-export async function isVideo<T extends InputTp | InputTp[], O extends boolean>(
-  input: T,
-  options?: IsOptions<O>
-) {
-  return isCustom<T, O>(input, VIDEO_MIME, options);
+type CustomReturn<T> = T extends InputTp
+  ? boolean
+  : T extends InputTp[]
+  ? CheckInputsReturn
+  : never;
+
+export async function isApplication<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, APPLICATION_MIME) as Promise<CustomReturn<T>>;
 }
 
-export async function isAudio<T extends InputTp | InputTp[], O extends boolean>(
-  input: T,
-  options?: IsOptions<O>
-) {
-  return isCustom<T, O>(input, AUDIO_MIME, options);
+export async function isImage<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, IMAGE_MIME) as Promise<CustomReturn<T>>;
 }
 
-export async function isModel<T extends InputTp | InputTp[], O extends boolean>(
-  input: T,
-  options?: IsOptions<O>
-) {
-  return isCustom<T, O>(input, MODEL_MIME, options);
+export async function isVideo<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, VIDEO_MIME) as Promise<CustomReturn<T>>;
 }
 
-export async function isText<T extends InputTp | InputTp[], O extends boolean>(
-  input: T,
-  options?: IsOptions<O>
-) {
-  return isCustom<T, O>(input, TEXT_MIME, options);
+export async function isAudio<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, AUDIO_MIME) as Promise<CustomReturn<T>>;
 }
 
-export async function isFont<T extends InputTp | InputTp[], O extends boolean>(
-  input: T,
-  options?: IsOptions<O>
-) {
-  return isCustom<T, O>(input, FONT_MIME, options);
+export async function isModel<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, MODEL_MIME) as Promise<CustomReturn<T>>;
+}
+
+export async function isText<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, TEXT_MIME) as Promise<CustomReturn<T>>;
+}
+
+export async function isFont<T extends InputTp | InputTp[]>(input: T) {
+  // @ts-ignore
+  return isCustom(input, FONT_MIME) as Promise<CustomReturn<T>>;
 }
