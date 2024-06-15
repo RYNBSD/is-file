@@ -10,7 +10,9 @@ export type Return<T> = {
   value: T;
 };
 
-export type IsOptions = Partial<{
-  // return the element with a mark to indicate if valid or not, in case of array only, default: false
-  returns: boolean;
-}>;
+export type IsOptions<T extends boolean = boolean> = {
+  /**
+   * return the element with a mark to indicate if valid or not, in case of array only @default false
+   */
+  returns?: T;
+};

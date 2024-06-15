@@ -1,12 +1,11 @@
-import type { FileTypeResult, IsOptions, Return } from "./types.js";
-type TypeFn<T> = (input: T) => Promise<FileTypeResult | undefined>;
-export declare function isCustom<T>(typeFn: TypeFn<T>, input: T | T[], me: string, options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isApplication<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isImage<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isVideo<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isAudio<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isModel<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isText<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export declare function isFont<T>(typeFn: TypeFn<T>, input: T | T[], options?: IsOptions): Promise<boolean | Return<T>[]>;
-export {};
+import type { IsOptions, Return } from "./types.js";
+import type { InputTp } from "./config.js";
+export declare function isCustom<T extends InputTp | InputTp[], O extends boolean>(input: T, me: string, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isApplication<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isImage<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isVideo<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isAudio<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isModel<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isText<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
+export declare function isFont<T extends InputTp | InputTp[], O extends boolean>(input: T, options?: IsOptions<O>): Promise<O extends true ? Return<T>[] : boolean>;
 //# sourceMappingURL=fn.d.ts.map

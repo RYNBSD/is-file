@@ -1,4 +1,6 @@
-import type { FileTypeResult, IsOptions, Return } from "./types.js";
+import type { IsOptions, Return } from "./types.js";
+import type { InputTp } from "./config.js";
+import { typeFn } from "./config.js";
 
 const APPLICATION_MIME = "application/";
 const IMAGE_MIME = "image/";
@@ -8,36 +10,39 @@ const MODEL_MIME = "model/";
 const TEXT_MIME = "text/";
 const FONT_MIME = "font/";
 
-type TypeFn<T> = (input: T) => Promise<FileTypeResult | undefined>;
-
 // me = mime | extension
 
-async function checkInput<T>(typeFn: TypeFn<T>, input: T, me: string) {
+async function checkInput<T>(input: T, me: string) {
+  // @ts-ignore
   const type = (await typeFn(input)) ?? { mime: "", ext: "" };
   return type.mime.startsWith(me) || type.ext === me;
 }
 
 async function checkInputs<T>(
-  typeFn: TypeFn<T>,
-  inputs: T[],
+  inputs: T,
   me: string,
-  options?: IsOptions
-): Promise<boolean | Return<T>[]> {
+  options?: IsOptions<false>
+): Promise<boolean>;
+async function checkInputs<T>(
+  inputs: T,
+  me: string,
+  options?: IsOptions<true>
+): Promise<Return<T>[]>;
+async function checkInputs<T>(inputs: T[], me: string, options?: IsOptions) {
   const { returns = false } = options || {};
-
   const returnIndicator: Return<T>[] = [];
 
   const promises = await Promise.allSettled(
-    inputs.map((input) => checkInput<T>(typeFn, input, me))
+    inputs.map((input) => checkInput<T>(input, me))
   );
   for (const i in promises) {
     const promise = promises[i]!;
 
-    if ((promise.status === "rejected" || !promise.value) && !returns)
-      return false;
+    if (promise.status === "rejected" || !promise.value) return false;
+    if (!returns) continue;
 
     returnIndicator.push({
-      valid: (promise as PromiseFulfilledResult<boolean>).value,
+      valid: promise.value,
       value: inputs[i]!,
     });
   }
@@ -45,69 +50,65 @@ async function checkInputs<T>(
   return returns ? returnIndicator : true;
 }
 
-export async function isCustom<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  me: string,
-  options?: IsOptions
-) {
+export async function isCustom<
+  T extends InputTp | InputTp[],
+  O extends boolean
+>(input: T, me: string, options?: IsOptions<O>) {
   return Array.isArray(input)
-    ? checkInputs(typeFn, input, me, options)
-    : checkInput(typeFn, input, me);
+    ? // @ts-ignore
+      (checkInputs<T>(input, me, options) as Promise<
+        O extends true ? Return<T>[] : boolean
+      >)
+    : (checkInput<T>(input, me) as Promise<
+        O extends true ? Return<T>[] : boolean
+      >);
 }
 
-export async function isApplication<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
-) {
-  return isCustom(typeFn, input, APPLICATION_MIME, options);
+export async function isApplication<
+  T extends InputTp | InputTp[],
+  O extends boolean
+>(input: T, options?: IsOptions<O>) {
+  return isCustom<T, O>(input, APPLICATION_MIME, options);
 }
 
-export async function isImage<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
+export async function isImage<T extends InputTp | InputTp[], O extends boolean>(
+  input: T,
+  options?: IsOptions<O>
 ) {
-  return isCustom(typeFn, input, IMAGE_MIME, options);
+  return isCustom<T, O>(input, IMAGE_MIME, options);
 }
 
-export async function isVideo<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
+export async function isVideo<T extends InputTp | InputTp[], O extends boolean>(
+  input: T,
+  options?: IsOptions<O>
 ) {
-  return isCustom(typeFn, input, VIDEO_MIME, options);
+  return isCustom<T, O>(input, VIDEO_MIME, options);
 }
 
-export async function isAudio<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
+export async function isAudio<T extends InputTp | InputTp[], O extends boolean>(
+  input: T,
+  options?: IsOptions<O>
 ) {
-  return isCustom(typeFn, input, AUDIO_MIME, options);
+  return isCustom<T, O>(input, AUDIO_MIME, options);
 }
 
-export async function isModel<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
+export async function isModel<T extends InputTp | InputTp[], O extends boolean>(
+  input: T,
+  options?: IsOptions<O>
 ) {
-  return isCustom(typeFn, input, MODEL_MIME, options);
+  return isCustom<T, O>(input, MODEL_MIME, options);
 }
 
-export async function isText<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
+export async function isText<T extends InputTp | InputTp[], O extends boolean>(
+  input: T,
+  options?: IsOptions<O>
 ) {
-  return isCustom(typeFn, input, TEXT_MIME, options);
+  return isCustom<T, O>(input, TEXT_MIME, options);
 }
 
-export async function isFont<T>(
-  typeFn: TypeFn<T>,
-  input: T | T[],
-  options?: IsOptions
+export async function isFont<T extends InputTp | InputTp[], O extends boolean>(
+  input: T,
+  options?: IsOptions<O>
 ) {
-  return isCustom(typeFn, input, FONT_MIME, options);
+  return isCustom<T, O>(input, FONT_MIME, options);
 }
