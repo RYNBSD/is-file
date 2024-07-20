@@ -1,0 +1,8 @@
+node_modules
+__test__
+assets
+example
+.gitignore
+babel.config.js
+jest.config.cjs
+README.md
